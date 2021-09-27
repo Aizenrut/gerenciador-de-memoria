@@ -18,10 +18,10 @@ int inicia_alocador()
 {
     memoria = mmap(NULL, MEMORIA_4KB, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 
-    if(memoria == -1)
+    if(memoria == MAP_FAILED)
        return 1;
     else
-        return 0;
+       return 0;
 }
 
 int finalizar()
@@ -41,10 +41,10 @@ char *aloca(int quantidade)
 
     if (inicio == NULL)
     {
-        posicao *nova = { memoria[indice], indice, quantidade, NULL };
-        inicio = nova;
+        posicao nova = { &memoria[indice], indice, quantidade, NULL };
+        inicio = &nova;
         
-        return nova->ponteiro;
+        return inicio->ponteiro;
     }
     else
     {
@@ -64,12 +64,11 @@ char *aloca(int quantidade)
             atual = atual->proxima;
         }
         
-        posicao *nova = { memoria[indice], indice, quantidade, NULL };
-        
-        nova->proxima = proxima;
-        atual->proxima = nova;
+        posicao nova = { &memoria[indice], indice, quantidade, NULL };
+        (&nova)->proxima = proxima;
+        atual->proxima = &nova;
 
-        return nova->ponteiro;
+        return (&nova)->ponteiro;
     }
 
     return NULL;

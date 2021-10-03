@@ -65,6 +65,9 @@ char *aloca(int quantidade)
 
 int desaloca(char * ponteiro)
 {
+    if (memoria == NULL)
+        return 1;
+
     int indice = -1;
 
     for (int i = 0; i < MEMORIA_4KB; i++)
